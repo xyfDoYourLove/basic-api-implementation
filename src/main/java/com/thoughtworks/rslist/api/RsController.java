@@ -9,14 +9,14 @@ import java.util.List;
 
 @RestController
 public class RsController {
-  private List<RsEvent> rsEvents = initRsList();
+  private List<RsEvent> rsEvents;
 
-  private List<RsEvent> initRsList() {
+  public void initRsEvents() {
     List<RsEvent> rsEvents = new ArrayList<>();
     rsEvents.add(new RsEvent("第一条事件", "无标签"));
     rsEvents.add(new RsEvent("第二条事件", "无标签"));
     rsEvents.add(new RsEvent("第三条事件", "无标签"));
-    return rsEvents;
+    this.rsEvents = rsEvents;
   }
 
   @GetMapping("/rs/list")
@@ -35,5 +35,22 @@ public class RsController {
   @PostMapping("/rs/event")
   public void addRsEvent(@RequestBody RsEvent rsEvent) {
     rsEvents.add(rsEvent);
+  }
+
+  @PatchMapping("/rs/{index}")
+  public void updateRsEventIndex(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+    RsEvent rsEventToUpdate = rsEvents.get(index - 1);
+    if (rsEvent.getEventName() != null && rsEvent.getEventName() != "") {
+      rsEventToUpdate.setEventName(rsEvent.getEventName());
+    }
+    if (rsEvent.getKeyWord() != null && rsEvent.getKeyWord() != "") {
+      rsEventToUpdate.setKeyWord(rsEvent.getKeyWord());
+    }
+    rsEvents.set(index - 1, rsEventToUpdate);
+  }
+
+  @DeleteMapping("/rs/{index}")
+  public void deleteRsEventIndex(@PathVariable int index) {
+    rsEvents.remove(index - 1);
   }
 }
