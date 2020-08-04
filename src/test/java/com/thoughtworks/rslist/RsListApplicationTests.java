@@ -23,12 +23,9 @@ class RsListApplicationTests {
     @Autowired
     MockMvc mockMvc;
 
-    @Autowired
-    RsController rsController;
-
     @BeforeEach
     void should_init_RsEvents() {
-        rsController.initRsEvents();
+        RsController.initRsEvents();
     }
 
     @Test
@@ -88,7 +85,7 @@ class RsListApplicationTests {
     }
 
     @Test
-    public void should_add_rs_event() throws Exception {
+    void should_add_rs_event() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         RsEvent rsEvent = new RsEvent("石油降价了", "经济");
         String event = objectMapper.writeValueAsString(rsEvent);
@@ -110,7 +107,7 @@ class RsListApplicationTests {
     }
 
     @Test
-    public void should_update_rs_event_index() throws Exception {
+    void should_update_rs_event_index() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         RsEvent rsEvent = new RsEvent("修改第三条事件", "");
         String event = objectMapper.writeValueAsString(rsEvent);
@@ -130,7 +127,7 @@ class RsListApplicationTests {
     }
 
     @Test
-    public void should_delete_rs_event_index() throws Exception {
+    void should_delete_rs_event_index() throws Exception {
         mockMvc.perform(delete("/rs/3"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/list"))

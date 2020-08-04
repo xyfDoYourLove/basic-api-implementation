@@ -9,14 +9,14 @@ import java.util.List;
 
 @RestController
 public class RsController {
-  private List<RsEvent> rsEvents;
 
-  public void initRsEvents() {
-    List<RsEvent> rsEvents = new ArrayList<>();
+  private static List<RsEvent> rsEvents;
+
+  public static void initRsEvents() {
+    rsEvents = new ArrayList<>();
     rsEvents.add(new RsEvent("第一条事件", "无标签"));
     rsEvents.add(new RsEvent("第二条事件", "无标签"));
     rsEvents.add(new RsEvent("第三条事件", "无标签"));
-    this.rsEvents = rsEvents;
   }
 
   @GetMapping("/rs/list")
