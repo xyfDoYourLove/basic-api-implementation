@@ -1,10 +1,11 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -14,9 +15,10 @@ public class RsController {
 
   public static void initRsEvents() {
     rsEvents = new ArrayList<>();
-    rsEvents.add(new RsEvent("第一条事件", "无标签"));
-    rsEvents.add(new RsEvent("第二条事件", "无标签"));
-    rsEvents.add(new RsEvent("第三条事件", "无标签"));
+    User user = new User("xiaowang", "female", 18, "a@thoughtworks.com", "18888888888", 10);
+    rsEvents.add(new RsEvent("第一条事件", "无标签", user));
+    rsEvents.add(new RsEvent("第二条事件", "无标签", user));
+    rsEvents.add(new RsEvent("第三条事件", "无标签", user));
   }
 
   @GetMapping("/rs/list")
@@ -33,8 +35,21 @@ public class RsController {
   }
 
   @PostMapping("/rs/event")
-  public void addRsEvent(@RequestBody RsEvent rsEvent) {
+  public void addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
     rsEvents.add(rsEvent);
+    if (!isAlreadyRegistered(rsEvent.getUser())) {
+      UserController.userList.add(rsEvent.getUser());
+    }
+  }
+
+  public Boolean isAlreadyRegistered(User user) {
+
+    for (int i = 0; i < UserController.userList.size(); i++) {
+      if (user.getUserName().equals(UserController.userList.get(i).getUserName())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @PatchMapping("/rs/{index}")
@@ -47,6 +62,10 @@ public class RsController {
       rsEventToUpdate.setKeyWord(rsEvent.getKeyWord());
     }
     rsEvents.set(index - 1, rsEventToUpdate);
+
+    if (!isAlreadyRegistered(rsEvent.getUser())) {
+      UserController.userList.add(rsEvent.getUser());
+    }
   }
 
   @DeleteMapping("/rs/{index}")
