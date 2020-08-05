@@ -160,8 +160,8 @@ class RsListApplicationTests {
 
         mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[1].userName", is("xyf")))
-                .andExpect(jsonPath("$[1].age", is(19)))
+                .andExpect(jsonPath("$[1].user_name", is("xyf")))
+                .andExpect(jsonPath("$[1].user_age", is(19)))
                 .andExpect(status().isOk());
     }
 

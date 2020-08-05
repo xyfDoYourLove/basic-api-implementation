@@ -30,7 +30,8 @@ public class UserController {
 
     @GetMapping("/get/users")
     public ResponseEntity getUserList() {
-        return ResponseEntity.ok(userList);
+        ResponseEntity<List<User>> ok = ResponseEntity.ok(userList);
+        return ok;
     }
 
 }
