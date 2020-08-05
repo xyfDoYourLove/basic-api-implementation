@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,11 +28,30 @@ public class RsController {
     if (start == null || end == null) {
       return ResponseEntity.ok(rsEvents);
     }
+    if (!isStartAndEndValid(start, end)) {
+      throw new RsEventNotValidException("invalid request param");
+    }
     return ResponseEntity.ok(rsEvents.subList(start - 1, end));
+  }
+
+  public boolean isStartAndEndValid(int start, int end) {
+    if (start < 0 || start > rsEvents.size() - 2) {
+      return false;
+    }
+    if (end < 1 || end > rsEvents.size() - 1) {
+      return false;
+    }
+    if (start >= end) {
+      return false;
+    }
+    return true;
   }
 
   @GetMapping("/rs/{index}")
   public ResponseEntity getRsListIndex(@PathVariable int index) {
+    if (index < 1 || index > rsEvents.size()) {
+      throw new RsEventNotValidException("invalid index");
+    }
     return ResponseEntity.ok(rsEvents.get(index - 1));
   }
 
