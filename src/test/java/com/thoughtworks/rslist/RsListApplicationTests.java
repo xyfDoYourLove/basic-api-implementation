@@ -435,8 +435,8 @@ class RsListApplicationTests {
 
     @Test
     void should_throw_method_argument_not_valid_exception() throws Exception {
-        User user = new User("xyf4564654564", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
-        RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
+        User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
+        RsEvent rsEvent = new RsEvent("添加一条事件", null, user);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
@@ -451,5 +451,16 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/list?start=-1&end=4"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("invalid request param")));
+    }
+
+    @Test
+    void should_throw_invalid_user() throws Exception {
+        User user = new User("xyf21313123", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String event = objectMapper.writeValueAsString(user);
+
+        mockMvc.perform(post("/user/register").content(event).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("invalid user")));
     }
 }
