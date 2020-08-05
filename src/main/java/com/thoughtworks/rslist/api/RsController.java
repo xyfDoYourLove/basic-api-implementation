@@ -35,10 +35,10 @@ public class RsController {
   }
 
   public boolean isStartAndEndValid(int start, int end) {
-    if (start < 0 || start > rsEvents.size() - 2) {
+    if (start < 1 || start > rsEvents.size() - 1) {
       return false;
     }
-    if (end < 1 || end > rsEvents.size() - 1) {
+    if (end < 2 || end > rsEvents.size()) {
       return false;
     }
     if (start >= end) {
