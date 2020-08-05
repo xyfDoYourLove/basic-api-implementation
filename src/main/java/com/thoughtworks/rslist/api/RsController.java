@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,24 +23,25 @@ public class RsController {
   }
 
   @GetMapping("/rs/list")
-  public List<RsEvent> getRsListBetween(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
+  public ResponseEntity getRsListBetween(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
     if (start == null || end == null) {
-      return rsEvents;
+      return ResponseEntity.ok(rsEvents);
     }
-    return rsEvents.subList(start - 1, end);
+    return ResponseEntity.ok(rsEvents.subList(start - 1, end));
   }
 
   @GetMapping("/rs/{index}")
-  public RsEvent getRsListIndex(@PathVariable int index) {
-    return rsEvents.get(index - 1);
+  public ResponseEntity getRsListIndex(@PathVariable int index) {
+    return ResponseEntity.ok(rsEvents.get(index - 1));
   }
 
   @PostMapping("/rs/event")
-  public void addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+  public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
     rsEvents.add(rsEvent);
     if (!isAlreadyRegistered(rsEvent.getUser())) {
       UserController.userList.add(rsEvent.getUser());
     }
+    return ResponseEntity.created(null).header("index", String.valueOf(rsEvents.size() - 1)).build();
   }
 
   public Boolean isAlreadyRegistered(User user) {
@@ -53,7 +55,7 @@ public class RsController {
   }
 
   @PatchMapping("/rs/{index}")
-  public void updateRsEventIndex(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+  public ResponseEntity updateRsEventIndex(@PathVariable int index, @RequestBody RsEvent rsEvent) {
     RsEvent rsEventToUpdate = rsEvents.get(index - 1);
     if (rsEvent.getEventName() != null && rsEvent.getEventName() != "") {
       rsEventToUpdate.setEventName(rsEvent.getEventName());
@@ -66,10 +68,13 @@ public class RsController {
     if (!isAlreadyRegistered(rsEvent.getUser())) {
       UserController.userList.add(rsEvent.getUser());
     }
+
+    return ResponseEntity.ok().build();
   }
 
   @DeleteMapping("/rs/{index}")
-  public void deleteRsEventIndex(@PathVariable int index) {
+  public ResponseEntity deleteRsEventIndex(@PathVariable int index) {
     rsEvents.remove(index - 1);
+    return ResponseEntity.ok().build();
   }
 }
