@@ -158,7 +158,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[1].userName", is("xyf")))
                 .andExpect(jsonPath("$[1].age", is(19)))
@@ -176,7 +176,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -192,7 +192,7 @@ class RsListApplicationTests {
         mockMvc.perform(patch("/rs/3").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(status().isOk());
     }
@@ -208,7 +208,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -224,7 +224,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -240,7 +240,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -256,7 +256,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -272,7 +272,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -288,7 +288,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -304,7 +304,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -320,7 +320,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -337,7 +337,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -354,7 +354,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
@@ -371,7 +371,7 @@ class RsListApplicationTests {
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/user/list"))
+        mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }

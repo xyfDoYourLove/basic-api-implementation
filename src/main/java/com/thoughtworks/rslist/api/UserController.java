@@ -28,7 +28,7 @@ public class UserController {
         return ResponseEntity.created(null).header("index", String.valueOf(userList.size() - 1)).build();
     }
 
-    @GetMapping("/user/list")
+    @GetMapping("/get/users")
     public ResponseEntity getUserList() {
         return ResponseEntity.ok(userList);
     }
