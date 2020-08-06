@@ -1,6 +1,9 @@
-package com.thoughtworks.rslist.api;
+package com.thoughtworks.rslist.api.controller;
 
+import com.thoughtworks.rslist.Data.Data;
+import com.thoughtworks.rslist.api.service.UserService;
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,24 +17,18 @@ import java.util.List;
 @RestController
 public class UserController {
 
-    public static List<User> userList = new ArrayList<>();
-
-    public static void initUserList() {
-        userList = new ArrayList<>();
-        User user = new User("xiaowang", "male", 19, "xiao@thought.com", "19999999999", 10);
-        userList.add(user);
-    }
+    @Autowired
+    UserService userService;
 
     @PostMapping("/user/register")
     public ResponseEntity registerUser(@RequestBody @Valid User user) {
-        userList.add(user);
-        return ResponseEntity.created(null).header("index", String.valueOf(userList.size() - 1)).build();
+        userService.registerUser(user);
+        return ResponseEntity.created(null).header("index", String.valueOf(Data.userList.size() - 1)).build();
     }
 
     @GetMapping("/get/users")
     public ResponseEntity getUserList() {
-        ResponseEntity<List<User>> ok = ResponseEntity.ok(userList);
-        return ok;
+        return ResponseEntity.ok(userService.getUserList());
     }
 
 }

@@ -2,8 +2,6 @@ package com.thoughtworks.rslist;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thoughtworks.rslist.api.RsController;
-import com.thoughtworks.rslist.api.UserController;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.thoughtworks.rslist.Data.Data.initRsEvents;
+import static com.thoughtworks.rslist.Data.Data.initUserList;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -27,8 +27,8 @@ class RsListApplicationTests {
 
     @BeforeEach
     void should_init_RsEvents() {
-        RsController.initRsEvents();
-        UserController.initUserList();
+        initRsEvents();
+        initUserList();
     }
 
     @Test

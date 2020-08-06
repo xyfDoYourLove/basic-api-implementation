@@ -1,6 +1,8 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.Data.Data;
+import com.thoughtworks.rslist.api.controller.UserController;
 import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.thoughtworks.rslist.Data.Data.initUserList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,7 +28,7 @@ class UserControllerTest {
 
     @BeforeEach
     public void should_init_user_list() {
-        UserController.initUserList();
+        initUserList();
     }
 
     @Test
