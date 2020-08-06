@@ -57,26 +57,25 @@ public class RsServiceImpl implements RsService {
                 .voteNum(rsEvent.getUser().getVoteNum())
                 .build();
 
-        RsEventDto rsEventDto = RsEventDto.builder()
-                .eventName(rsEvent.getEventName())
-                .keyWord(rsEvent.getKeyWord())
-                .userDto(userDto)
-                .build();
-        rsEventRepository.save(rsEventDto);
-
         List<RsEventDto> all = rsEventRepository.findAll();
 
         if (userRepository.findByUserName(rsEvent.getUser().getUserName()) == null) {
-            userRepository.save(UserDto.builder()
-                    .userName(rsEvent.getUser().getUserName())
-                    .gender(rsEvent.getUser().getGender())
-                    .age(rsEvent.getUser().getAge())
-                    .email(rsEvent.getUser().getEmail())
-                    .phone(rsEvent.getUser().getPhone())
-                    .voteNum(rsEvent.getUser().getVoteNum())
-                    .build());
+            userRepository.save(userDto);
+            RsEventDto rsEventDto = RsEventDto.builder()
+                    .eventName(rsEvent.getEventName())
+                    .keyWord(rsEvent.getKeyWord())
+                    .userDto(userDto)
+                    .build();
+            rsEventRepository.save(rsEventDto);
+
             return ResponseEntity.badRequest().header("index", String.valueOf(all.size() - 1)).build();
         }
+        RsEventDto rsEventDto = RsEventDto.builder()
+                .eventName(rsEvent.getEventName())
+                .keyWord(rsEvent.getKeyWord())
+                .userDto(userRepository.findByUserName(rsEvent.getUser().getUserName()))
+                .build();
+        rsEventRepository.save(rsEventDto);
 
         return ResponseEntity.created(null).header("index", String.valueOf(all.size() - 1)).build();
     }
