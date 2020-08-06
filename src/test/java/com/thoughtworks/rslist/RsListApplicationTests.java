@@ -22,6 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class RsListApplicationTests {
 
+    public ObjectMapper objectMapper;
+
     @Autowired
     MockMvc mockMvc;
 
@@ -29,6 +31,8 @@ class RsListApplicationTests {
     void should_init_RsEvents() {
         initRsEvents();
         initUserList();
+        objectMapper = new ObjectMapper();
+        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
     }
 
     @Test
@@ -91,8 +95,6 @@ class RsListApplicationTests {
     void should_add_rs_event() throws Exception {
         User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("石油降价了", "经济", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -115,8 +117,6 @@ class RsListApplicationTests {
     void should_update_rs_event_index() throws Exception {
         User user = new User("xyf", "male", 2, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("修改第三条事件", "", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(patch("/rs/3").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -151,8 +151,6 @@ class RsListApplicationTests {
     void should_register_user_when_add_rs_event_if_user_not_exist() throws Exception {
         User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -169,8 +167,6 @@ class RsListApplicationTests {
     void should_not_register_user_when_add_rs_event_if_user_exist() throws Exception {
         User user = new User("xiaowang", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -185,8 +181,6 @@ class RsListApplicationTests {
     void should_register_user_when_update_rs_event_if_user_not_exist() throws Exception {
         User user = new User("xyf", "male", 2, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("修改第三条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(patch("/rs/3").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -201,8 +195,6 @@ class RsListApplicationTests {
     void userName_should_not_null() throws Exception {
         User user = new User("xyf", "male", 2, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent(null, "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -217,8 +209,6 @@ class RsListApplicationTests {
     void keyWord_should_not_null() throws Exception {
         User user = new User("xyf", "male", 2, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", null, user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -233,8 +223,6 @@ class RsListApplicationTests {
     void user_should_not_null() throws Exception {
 
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", null);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -249,8 +237,6 @@ class RsListApplicationTests {
     void user_userName_should_less_then_8() throws Exception {
         User user = new User("xyf4564654564", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -265,8 +251,6 @@ class RsListApplicationTests {
     void user_userName_should_not_null() throws Exception {
         User user = new User(null, "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -281,8 +265,6 @@ class RsListApplicationTests {
     void user_age_should_between_18_and_100() throws Exception {
         User user = new User("xyf", "male", 2, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -297,8 +279,6 @@ class RsListApplicationTests {
     void user_age_should_not_null() throws Exception {
         User user = new User("xyf", "male", null, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -313,8 +293,6 @@ class RsListApplicationTests {
     void user_email_should_suit_format() throws Exception {
         User user = new User("xyf", "male", 19, "xiaothoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -330,8 +308,6 @@ class RsListApplicationTests {
 
         User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "1888888888811", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -347,8 +323,6 @@ class RsListApplicationTests {
 
         User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", null, 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -364,8 +338,6 @@ class RsListApplicationTests {
 
         User user = new User("xyf", null, 19, "xiao@thoughtworks.com", "1888888888811", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -380,8 +352,6 @@ class RsListApplicationTests {
     void should_return_with_index_in_header_post() throws Exception {
         User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("石油降价了", "经济", user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -436,8 +406,6 @@ class RsListApplicationTests {
     void should_throw_method_argument_not_valid_exception() throws Exception {
         User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", null, user);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
@@ -455,7 +423,7 @@ class RsListApplicationTests {
     @Test
     void should_throw_invalid_user() throws Exception {
         User user = new User("xyf21313123", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
-        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper = new ObjectMapper();
         String event = objectMapper.writeValueAsString(user);
 
         mockMvc.perform(post("/user/register").content(event).contentType(MediaType.APPLICATION_JSON))

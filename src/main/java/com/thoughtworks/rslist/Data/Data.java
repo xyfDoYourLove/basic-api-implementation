@@ -8,11 +8,11 @@ import java.util.List;
 
 public class Data {
 
-    public static List<RsEvent> rsEvents;
+    public static List<RsEvent> rsEvents = new ArrayList<>();
     public static List<User> userList = new ArrayList<>();
 
     public static void initRsEvents() {
-        rsEvents = new ArrayList<>();
+        rsEvents.clear();
         User user = new User("xiaowang", "female", 18, "a@thoughtworks.com", "18888888888", 10);
         rsEvents.add(new RsEvent("第一条事件", "无标签", user));
         rsEvents.add(new RsEvent("第二条事件", "无标签", user));
@@ -20,7 +20,7 @@ public class Data {
     }
 
     public static void initUserList() {
-        userList = new ArrayList<>();
+        userList.clear();
         User user = new User("xiaowang", "male", 19, "xiao@thought.com", "19999999999", 10);
         userList.add(user);
     }
