@@ -2,8 +2,10 @@ package com.thoughtworks.rslist;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.api.repository.UserRepository;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.thoughtworks.rslist.Data.Data.initRsEvents;
-import static com.thoughtworks.rslist.Data.Data.initUserList;
+import static com.thoughtworks.rslist.common.method.DataInitMethod.initRsEvents;
+import static com.thoughtworks.rslist.common.method.DataInitMethod.initUserTable;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -27,12 +29,26 @@ class RsListApplicationTests {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    UserRepository userRepository;
+
     @BeforeEach
     void should_init_RsEvents() {
         initRsEvents();
-        initUserList();
+        initUserTable();
         objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
+
+        userRepository.deleteAll();
+        UserDto user = UserDto.builder()
+                .userName("xyf")
+                .gender("male")
+                .age(19)
+                .email("xiao@thought.com")
+                .phone("19999999999")
+                .voteNum(10)
+                .build();
+        userRepository.save(user);
     }
 
     @Test
@@ -157,9 +173,9 @@ class RsListApplicationTests {
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/get/users"))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[1].user_name", is("xyf")))
-                .andExpect(jsonPath("$[1].user_age", is(19)))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].userName", is("xyf")))
+                .andExpect(jsonPath("$[0].age", is(19)))
                 .andExpect(status().isOk());
     }
 
@@ -187,7 +203,7 @@ class RsListApplicationTests {
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/get/users"))
-                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(status().isOk());
     }
 

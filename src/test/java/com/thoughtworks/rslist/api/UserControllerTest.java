@@ -1,9 +1,10 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thoughtworks.rslist.Data.Data;
-import com.thoughtworks.rslist.api.controller.UserController;
+import com.thoughtworks.rslist.api.repository.UserRepository;
+import com.thoughtworks.rslist.common.method.DataInitMethod;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.thoughtworks.rslist.Data.Data.initUserList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -26,9 +28,24 @@ class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    UserRepository userRepository;
+
     @BeforeEach
     public void should_init_user_list() {
-        initUserList();
+
+        DataInitMethod.initUserTable();
+
+        userRepository.deleteAll();
+        UserDto user = UserDto.builder()
+                .userName("xyf")
+                .gender("male")
+                .age(19)
+                .email("xiao@thought.com")
+                .phone("19999999999")
+                .voteNum(10)
+                .build();
+        userRepository.save(user);
     }
 
     @Test
@@ -90,18 +107,50 @@ class UserControllerTest {
         mockMvc.perform(post("/user/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("index"))
-                .andExpect(header().string("index", "1"));
+                .andExpect(header().string("index", "0"));
     }
 
     @Test
     void should_get_all_user_with_expect_format() throws Exception {
         mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].user_name", is("xiaowang")))
-                .andExpect(jsonPath("$[0].user_gender", is("male")))
-                .andExpect(jsonPath("$[0].user_age", is(19)))
-                .andExpect(jsonPath("$[0].user_email", is("xiao@thought.com")))
-                .andExpect(jsonPath("$[0].user_phone", is("19999999999")))
+                .andExpect(jsonPath("$[0].userName", is("xyf")))
+                .andExpect(jsonPath("$[0].gender", is("male")))
+                .andExpect(jsonPath("$[0].age", is(19)))
+                .andExpect(jsonPath("$[0].email", is("xiao@thought.com")))
+                .andExpect(jsonPath("$[0].phone", is("19999999999")))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_register_user_to_database() throws Exception {
+        User user = new User("xyf", "male", 18, "x@y.com", "18888888888", 10);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(user);
+
+        mockMvc.perform(post("/user/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/get/users"))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].userName", is("xyf")));
+    }
+
+    @Test
+    void should_get_user_by_id() throws Exception {
+        UserDto userDto = userRepository.findAll().get(0);
+        mockMvc.perform(get("/get/user").param("id", String.valueOf(userDto.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user_name", is("xyf")));
+    }
+
+    @Test
+    void should_delete_user_by_id() throws Exception {
+        UserDto userDto = userRepository.findAll().get(0);
+        mockMvc.perform(delete("/delete/" + userDto.getId()))
+                .andExpect(status().isOk());
+
+        List<UserDto> all = userRepository.findAll();
+        assertEquals(0, all.size());
     }
 }

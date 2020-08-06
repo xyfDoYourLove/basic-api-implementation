@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.thoughtworks.rslist.Data.Data.rsEvents;
+import static com.thoughtworks.rslist.common.method.DataInitMethod.rsEvents;
 
 @RestController
 public class RsController {

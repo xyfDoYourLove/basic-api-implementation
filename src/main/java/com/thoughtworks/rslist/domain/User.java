@@ -2,9 +2,15 @@ package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @NotNull
@@ -39,18 +45,6 @@ public class User {
     @JsonProperty("user_voteNum")
     @JsonAlias("voteNum")
     private int voteNum = 10;
-
-    public User() {
-    }
-
-    public User(String userName, String gender, Integer age, String email, String phone, int voteNum) {
-        this.userName = userName;
-        this.gender = gender;
-        this.age = age;
-        this.email = email;
-        this.phone = phone;
-        this.voteNum = voteNum;
-    }
 
     public String getUserName() {
         return userName;

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.thoughtworks.rslist.Data.Data.rsEvents;
-import static com.thoughtworks.rslist.Data.Data.userList;
+import static com.thoughtworks.rslist.common.method.DataInitMethod.rsEvents;
+import static com.thoughtworks.rslist.common.method.DataInitMethod.userList;
 
 @Service
 public class RsServiceImpl implements RsService {
