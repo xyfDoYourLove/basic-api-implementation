@@ -47,12 +47,23 @@ public class RsServiceImpl implements RsService {
 
     @Override
     public ResponseEntity addRsEvent(RsEvent rsEvent) {
+
+        UserDto userDto = UserDto.builder()
+                .userName(rsEvent.getUser().getUserName())
+                .gender(rsEvent.getUser().getGender())
+                .age(rsEvent.getUser().getAge())
+                .email(rsEvent.getUser().getEmail())
+                .phone(rsEvent.getUser().getPhone())
+                .voteNum(rsEvent.getUser().getVoteNum())
+                .build();
+
         RsEventDto rsEventDto = RsEventDto.builder()
                 .eventName(rsEvent.getEventName())
                 .keyWord(rsEvent.getKeyWord())
-                .userId(1)
+                .userDto(userDto)
                 .build();
         rsEventRepository.save(rsEventDto);
+
         List<RsEventDto> all = rsEventRepository.findAll();
 
         if (userRepository.findByUserName(rsEvent.getUser().getUserName()) == null) {
@@ -86,8 +97,8 @@ public class RsServiceImpl implements RsService {
     }
 
     @Override
-    public void deleteRsEventIndex(int index) {
-        rsEvents.remove(index - 1);
+    public void deleteRsEventIndex(int id) {
+        rsEventRepository.deleteById(id);
     }
 
     public boolean isStartAndEndValid(int start, int end) {

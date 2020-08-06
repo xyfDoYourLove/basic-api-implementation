@@ -1,9 +1,11 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.api.repository.RsEventRepository;
 import com.thoughtworks.rslist.api.repository.UserRepository;
 import com.thoughtworks.rslist.common.method.DataInitMethod;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,8 +30,15 @@ class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    RsEventDto rsEvent;
+
+    UserDto user;
+
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RsEventRepository rsEventRepository;
 
     @BeforeEach
     public void should_init_user_list() {
@@ -37,7 +46,7 @@ class UserControllerTest {
         DataInitMethod.initUserTable();
 
         userRepository.deleteAll();
-        UserDto user = UserDto.builder()
+        user = UserDto.builder()
                 .userName("xyf")
                 .gender("male")
                 .age(19)
@@ -46,6 +55,14 @@ class UserControllerTest {
                 .voteNum(10)
                 .build();
         userRepository.save(user);
+
+        rsEventRepository.deleteAll();
+        rsEvent = RsEventDto.builder()
+                .eventName("第一条事件")
+                .keyWord("无标签")
+                .userDto(user)
+                .build();
+        rsEventRepository.save(rsEvent);
     }
 
     @Test
@@ -107,7 +124,7 @@ class UserControllerTest {
         mockMvc.perform(post("/user/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("index"))
-                .andExpect(header().string("index", "0"));
+                .andExpect(header().string("index", "1"));
     }
 
     @Test
@@ -124,16 +141,15 @@ class UserControllerTest {
 
     @Test
     void should_register_user_to_database() throws Exception {
-        User user = new User("xyf", "male", 18, "x@y.com", "18888888888", 10);
+        User user = new User("xyf1", "male", 18, "x@y.com", "18888888888", 10);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(user);
 
         mockMvc.perform(post("/user/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/get/users"))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].userName", is("xyf")));
+        List<UserDto> all = userRepository.findAll();
+        assertEquals(2, all.size());
     }
 
     @Test
@@ -151,6 +167,15 @@ class UserControllerTest {
                 .andExpect(status().isOk());
 
         List<UserDto> all = userRepository.findAll();
+        assertEquals(0, all.size());
+    }
+
+    @Test
+    void should_delete_rs_event_when_delete_user() throws Exception {
+        mockMvc.perform(delete("/delete/" + user.getId()))
+                .andExpect(status().isOk());
+
+        List<RsEventDto> all = rsEventRepository.findAll();
         assertEquals(0, all.size());
     }
 }

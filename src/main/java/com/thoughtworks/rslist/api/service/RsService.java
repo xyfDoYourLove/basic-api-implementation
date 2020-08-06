@@ -15,6 +15,6 @@ public interface RsService {
 
     void updateRsEventIndex(int index, RsEvent rsEvent);
 
-    void deleteRsEventIndex(int index);
+    void deleteRsEventIndex(int id);
 
 }

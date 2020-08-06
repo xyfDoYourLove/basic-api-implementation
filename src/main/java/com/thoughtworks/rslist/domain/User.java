@@ -44,6 +44,7 @@ public class User {
 
     @JsonProperty("user_voteNum")
     @JsonAlias("voteNum")
+    @Builder.Default
     private int voteNum = 10;
 
     public String getUserName() {

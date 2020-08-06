@@ -52,9 +52,9 @@ public class RsController {
     return ResponseEntity.ok().build();
   }
 
-  @DeleteMapping("/rs/{index}")
-  public ResponseEntity deleteRsEventIndex(@PathVariable int index) {
-    rsService.deleteRsEventIndex(index);
+  @DeleteMapping("/rs/{id}")
+  public ResponseEntity deleteRsEventIndex(@PathVariable int id) {
+    rsService.deleteRsEventIndex(id);
     return ResponseEntity.ok().build();
   }
 }

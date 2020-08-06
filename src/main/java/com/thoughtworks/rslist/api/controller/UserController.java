@@ -3,11 +3,13 @@ package com.thoughtworks.rslist.api.controller;
 import com.thoughtworks.rslist.common.method.DataInitMethod;
 import com.thoughtworks.rslist.api.service.UserService;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -17,13 +19,14 @@ public class UserController {
 
     @PostMapping("/user/register")
     public ResponseEntity registerUser(@RequestBody @Valid User user) {
-        userService.registerUser(user);
-        return ResponseEntity.created(null).header("index", String.valueOf(DataInitMethod.userList.size() - 1)).build();
+        ResponseEntity responseEntity = userService.registerUser(user);
+        return responseEntity;
     }
 
     @GetMapping("/get/users")
     public ResponseEntity getUserList() {
-        return ResponseEntity.ok(userService.getUserList());
+        List<UserDto> userList = userService.getUserList();
+        return ResponseEntity.ok(userList);
     }
 
     @GetMapping("/get/user")

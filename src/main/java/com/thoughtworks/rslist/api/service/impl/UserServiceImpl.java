@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.api.repository.UserRepository;
 import com.thoughtworks.rslist.api.service.UserService;
 import com.thoughtworks.rslist.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 
     @Override
-    public void registerUser(User user) {
+    public ResponseEntity registerUser(User user) {
         UserDto userDto = UserDto.builder()
                 .userName(user.getUserName())
                 .gender(user.getGender())
@@ -27,6 +28,10 @@ public class UserServiceImpl implements UserService{
                 .voteNum(user.getVoteNum())
                 .build();
         userRepository.save(userDto);
+
+        List<UserDto> all = userRepository.findAll();
+
+        return ResponseEntity.created(null).header("index", String.valueOf(all.size() - 1)).build();
     }
 
     @Override
