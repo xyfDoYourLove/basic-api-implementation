@@ -23,6 +23,8 @@ public class RsEventDto {
 
     private String keyWord;
 
-    @ManyToOne
-    private UserDto userDto;
+    private int userId;
+
+//    @ManyToOne
+//    private UserDto userDto;
 }

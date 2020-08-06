@@ -42,8 +42,8 @@ public class RsController {
 
   @PostMapping("/rs/event")
   public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
-    rsService.addRsEvent(rsEvent);
-    return ResponseEntity.created(null).header("index", String.valueOf(rsEvents.size() - 1)).build();
+    ResponseEntity responseEntity = rsService.addRsEvent(rsEvent);
+    return responseEntity;
   }
 
   @PatchMapping("/rs/{index}")

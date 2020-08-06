@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api.service;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface RsService {
 
     RsEvent getRsListIndex(int index);
 
-    void addRsEvent(RsEvent rsEvent);
+    ResponseEntity addRsEvent(RsEvent rsEvent);
 
     void updateRsEventIndex(int index, RsEvent rsEvent);
 

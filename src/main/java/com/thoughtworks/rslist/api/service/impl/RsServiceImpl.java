@@ -1,9 +1,15 @@
 package com.thoughtworks.rslist.api.service.impl;
 
+import com.thoughtworks.rslist.api.repository.RsEventRepository;
+import com.thoughtworks.rslist.api.repository.UserRepository;
 import com.thoughtworks.rslist.api.service.RsService;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.dto.RsEventDto;
+import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +19,12 @@ import static com.thoughtworks.rslist.common.method.DataInitMethod.userList;
 
 @Service
 public class RsServiceImpl implements RsService {
+
+    @Autowired
+    RsEventRepository rsEventRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public List<RsEvent> getRsListBetween(Integer start, Integer end) {
@@ -34,11 +46,28 @@ public class RsServiceImpl implements RsService {
     }
 
     @Override
-    public void addRsEvent(RsEvent rsEvent) {
-        rsEvents.add(rsEvent);
-        if (!isAlreadyRegistered(rsEvent.getUser())) {
-            userList.add(rsEvent.getUser());
+    public ResponseEntity addRsEvent(RsEvent rsEvent) {
+        RsEventDto rsEventDto = RsEventDto.builder()
+                .eventName(rsEvent.getEventName())
+                .keyWord(rsEvent.getKeyWord())
+                .userId(1)
+                .build();
+        rsEventRepository.save(rsEventDto);
+        List<RsEventDto> all = rsEventRepository.findAll();
+
+        if (userRepository.findByUserName(rsEvent.getUser().getUserName()) == null) {
+            userRepository.save(UserDto.builder()
+                    .userName(rsEvent.getUser().getUserName())
+                    .gender(rsEvent.getUser().getGender())
+                    .age(rsEvent.getUser().getAge())
+                    .email(rsEvent.getUser().getEmail())
+                    .phone(rsEvent.getUser().getPhone())
+                    .voteNum(rsEvent.getUser().getVoteNum())
+                    .build());
+            return ResponseEntity.badRequest().header("index", String.valueOf(all.size() - 1)).build();
         }
+
+        return ResponseEntity.created(null).header("index", String.valueOf(all.size() - 1)).build();
     }
 
     @Override
