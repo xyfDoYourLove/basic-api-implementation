@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RsService {
 
-    List<RsEvent> getRsListBetween(Integer start, Integer end);
+    List<RsEvent> getRsList();
 
     RsEvent getRsListIndex(int index);
 

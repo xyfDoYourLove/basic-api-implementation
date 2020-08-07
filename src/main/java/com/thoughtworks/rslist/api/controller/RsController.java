@@ -6,15 +6,11 @@ import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import com.thoughtworks.rslist.param.RsEventInputParam;
 import com.thoughtworks.rslist.param.VoteInputParam;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
-
-import static com.thoughtworks.rslist.common.method.DataInitMethod.rsEvents;
 
 @RestController
 public class RsController {
@@ -24,13 +20,8 @@ public class RsController {
 
   @GetMapping("/rs/list")
   public ResponseEntity getRsListBetween(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
-    List<RsEvent> rsListBetween = null;
-    try {
-      rsListBetween = rsService.getRsListBetween(start, end);
-    } catch (RsEventNotValidException e) {
-      throw e;
-    }
-    return ResponseEntity.ok(rsListBetween);
+    List<RsEvent> rsList = rsService.getRsList();
+    return ResponseEntity.ok(rsList);
   }
 
   @GetMapping("/rs/{index}")

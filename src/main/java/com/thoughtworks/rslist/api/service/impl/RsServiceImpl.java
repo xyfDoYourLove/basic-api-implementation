@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.thoughtworks.rslist.common.method.DataInitMethod.rsEvents;
 import static com.thoughtworks.rslist.common.method.DataInitMethod.userList;
@@ -34,14 +35,18 @@ public class RsServiceImpl implements RsService {
     VoteRepository voteRepository;
 
     @Override
-    public List<RsEvent> getRsListBetween(Integer start, Integer end) {
-        if (start == null || end == null) {
-            return rsEvents;
-        }
-        if (!isStartAndEndValid(start, end)) {
-            throw new RsEventNotValidException("invalid request param");
-        }
-        return rsEvents.subList(start - 1, end);
+    public List<RsEvent> getRsList() {
+        List<RsEvent> all = rsEventRepository.findAll().stream().map(
+                item -> {
+                    RsEvent rsEvent = new RsEvent();
+                    rsEvent.setEventName(item.getEventName());
+                    rsEvent.setKeyWord(item.getKeyWord());
+                    rsEvent.setVotedNum(item.getVotedNum());
+
+                    return rsEvent;
+                }
+        ).collect(Collectors.toList());
+        return all;
     }
 
     @Override
