@@ -11,7 +11,7 @@ public interface RsService {
 
     List<RsEvent> getRsList();
 
-    RsEvent getRsListIndex(int index);
+    RsEvent getRsEventById(int index);
 
     ResponseEntity addRsEvent(RsEvent rsEvent);
 

@@ -37,24 +37,14 @@ public class RsServiceImpl implements RsService {
     @Override
     public List<RsEvent> getRsList() {
         List<RsEvent> all = rsEventRepository.findAll().stream().map(
-                item -> {
-                    RsEvent rsEvent = new RsEvent();
-                    rsEvent.setEventName(item.getEventName());
-                    rsEvent.setKeyWord(item.getKeyWord());
-                    rsEvent.setVotedNum(item.getVotedNum());
-
-                    return rsEvent;
-                }
+                item -> item.convert2RsEvent()
         ).collect(Collectors.toList());
         return all;
     }
 
     @Override
-    public RsEvent getRsListIndex(int index) {
-        if (index < 1 || index > rsEvents.size()) {
-            throw new RsEventNotValidException("invalid index");
-        }
-        return rsEvents.get(index - 1);
+    public RsEvent getRsEventById(int id) {
+        return rsEventRepository.findById(id).get().convert2RsEvent();
     }
 
     @Override

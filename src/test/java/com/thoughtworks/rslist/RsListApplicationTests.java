@@ -88,46 +88,13 @@ class RsListApplicationTests {
 
     @Test
     void should_get_re_event_index() throws Exception {
-        mockMvc.perform(get("/rs/1"))
+        List<RsEventDto> all = rsEventRepository.findAll();
+        mockMvc.perform(get("/rs/" + all.get(0).getId()))
                 .andExpect(jsonPath("$.eventName", is("第一条事件")))
-                .andExpect(jsonPath("$.keyWord", is("无标签")))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/2"))
-                .andExpect(jsonPath("$.eventName", is("第二条事件")))
-                .andExpect(jsonPath("$.keyWord", is("无标签")))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/3"))
-                .andExpect(jsonPath("$.eventName", is("第三条事件")))
                 .andExpect(jsonPath("$.keyWord", is("无标签")))
                 .andExpect(status().isOk());
     }
 
-//    @Test
-//    void should_get_re_event_between() throws Exception {
-//        mockMvc.perform(get("/rs/list?start=1&end=2"))
-//                .andExpect(jsonPath("$", hasSize(2)))
-//                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-//                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
-//                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-//                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
-//                .andExpect(status().isOk());
-//        mockMvc.perform(get("/rs/list?start=2&end=3"))
-//                .andExpect(jsonPath("$", hasSize(2)))
-//                .andExpect(jsonPath("$[0].eventName", is("第二条事件")))
-//                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
-//                .andExpect(jsonPath("$[1].eventName", is("第三条事件")))
-//                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
-//                .andExpect(status().isOk());
-//        mockMvc.perform(get("/rs/list?start=1&end=3"))
-//                .andExpect(jsonPath("$", hasSize(3)))
-//                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-//                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
-//                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-//                .andExpect(jsonPath("$[1].keyWord", is("无标签")))
-//                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-//                .andExpect(jsonPath("$[2].keyWord", is("无标签")))
-//                .andExpect(status().isOk());
-//    }
 
     @Test
     void should_add_rs_event() throws Exception {
@@ -399,28 +366,12 @@ class RsListApplicationTests {
 
     @Test
     void should_get_re_event_with_no_user() throws Exception {
-        mockMvc.perform(get("/rs/1"))
+        List<RsEventDto> all = rsEventRepository.findAll();
+        mockMvc.perform(get("/rs/" + all.get(0).getId()))
                 .andExpect(jsonPath("$.eventName", is("第一条事件")))
                 .andExpect(jsonPath("$.keyWord", is("无标签")))
                 .andExpect(jsonPath("$", not(hasKey("user"))))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/2"))
-                .andExpect(jsonPath("$.eventName", is("第二条事件")))
-                .andExpect(jsonPath("$.keyWord", is("无标签")))
-                .andExpect(jsonPath("$", not(hasKey("user"))))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/3"))
-                .andExpect(jsonPath("$.eventName", is("第三条事件")))
-                .andExpect(jsonPath("$.keyWord", is("无标签")))
-                .andExpect(jsonPath("$", not(hasKey("user"))))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void should_throw_index_exception() throws Exception {
-        mockMvc.perform(get("/rs/0"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error", is("invalid index")));
     }
 
     @Test
@@ -433,13 +384,6 @@ class RsListApplicationTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is("invalid param")));
     }
-
-//    @Test
-//    void should_throw_invalid_request_param_if_start_and_end_not_valid() throws Exception {
-//        mockMvc.perform(get("/rs/list?start=-1&end=4"))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.error", is("invalid request param")));
-//    }
 
     @Test
     void should_throw_invalid_user() throws Exception {

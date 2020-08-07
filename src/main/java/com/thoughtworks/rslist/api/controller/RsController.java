@@ -2,7 +2,6 @@ package com.thoughtworks.rslist.api.controller;
 
 import com.thoughtworks.rslist.api.service.RsService;
 import com.thoughtworks.rslist.domain.RsEvent;
-import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import com.thoughtworks.rslist.param.RsEventInputParam;
 import com.thoughtworks.rslist.param.VoteInputParam;
@@ -24,15 +23,10 @@ public class RsController {
     return ResponseEntity.ok(rsList);
   }
 
-  @GetMapping("/rs/{index}")
-  public ResponseEntity getRsListIndex(@PathVariable int index) {
-    RsEvent rsEventIndex = null;
-    try {
-      rsEventIndex = rsService.getRsListIndex(index);
-    } catch (RsEventNotValidException e) {
-      throw e;
-    }
-    return ResponseEntity.ok(rsEventIndex);
+  @GetMapping("/rs/{id}")
+  public ResponseEntity getRsListIndex(@PathVariable int id) {
+    RsEvent rsEventById = rsService.getRsEventById(id);
+    return ResponseEntity.ok(rsEventById);
   }
 
   @PostMapping("/rs/event")

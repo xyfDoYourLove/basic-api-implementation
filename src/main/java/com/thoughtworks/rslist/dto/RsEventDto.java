@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.dto;
 
+import com.thoughtworks.rslist.domain.RsEvent;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,6 +38,15 @@ public class RsEventDto {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rsEventDto")
     private List<VoteDto> voteDto;
+
+    public RsEvent convert2RsEvent() {
+        RsEvent rsEvent = new RsEvent();
+        rsEvent.setEventName(getEventName());
+        rsEvent.setKeyWord(getKeyWord());
+        rsEvent.setVotedNum(getVotedNum());
+        rsEvent.setUser(getUserDto().convent2User());
+        return rsEvent;
+    }
 
     @Override
     public String toString() {

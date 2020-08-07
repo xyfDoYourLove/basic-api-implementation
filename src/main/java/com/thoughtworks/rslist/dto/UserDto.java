@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.dto;
 
+import com.thoughtworks.rslist.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -49,6 +50,17 @@ public class UserDto {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userDto")
     private List<VoteDto> voteDto;
+
+    public User convent2User() {
+        User user = new User();
+        user.setUserName(getUserName());
+        user.setGender(getGender());
+        user.setAge(getAge());
+        user.setEmail(getEmail());
+        user.setPhone(getPhone());
+        user.setVoteNum(getVoteNum());
+        return user;
+    }
 
     @Override
     public String toString() {

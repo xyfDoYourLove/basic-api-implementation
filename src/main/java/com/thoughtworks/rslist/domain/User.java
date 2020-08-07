@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.thoughtworks.rslist.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,18 @@ public class User {
     @JsonAlias("voteNum")
     @Builder.Default
     private int voteNum = 10;
+
+    public UserDto convent2UserDtoNoId() {
+        UserDto userDto = UserDto.builder()
+                .userName(getUserName())
+                .gender(getGender())
+                .age(getAge())
+                .email(getEmail())
+                .phone(getPhone())
+                .voteNum(getVoteNum())
+                .build();
+        return userDto;
+    }
 
     public String getUserName() {
         return userName;
