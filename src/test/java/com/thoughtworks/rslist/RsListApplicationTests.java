@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.api.repository.RsEventRepository;
 import com.thoughtworks.rslist.api.repository.UserRepository;
+import com.thoughtworks.rslist.api.repository.VoteRepository;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.param.RsEventInputParam;
 import com.thoughtworks.rslist.param.VoteInputParam;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import static org.hamcrest.Matchers.*;
@@ -44,6 +47,9 @@ class RsListApplicationTests {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    VoteRepository voteRepository;
+
     @BeforeEach
     void should_init_RsEvents() {
         objectMapper = new ObjectMapper();
@@ -63,6 +69,17 @@ class RsListApplicationTests {
                 .votedNum(0).userDto(user)
                 .build();
         rsEventRepository.save(rsEvent);
+
+        voteRepository.deleteAll();
+        VoteDto voteDto1 = VoteDto.builder()
+                .voteDateTime(new Date(118, 01, 01)).voteNum(5)
+                .rsEventDto(rsEvent).userDto(user)
+                .build();
+        VoteDto voteDto2 = VoteDto.builder()
+                .voteDateTime(new Date()).voteNum(5)
+                .rsEventDto(rsEvent).userDto(user)
+                .build();
+        voteRepository.saveAll(Arrays.asList(voteDto1, voteDto2));
     }
 
     @Test
@@ -496,5 +513,17 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[0].id", is(rsEventDto.getId())))
                 .andExpect(jsonPath("$[0].votedNum", is(0)))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_return_vote_record_between_start_end() throws Exception {
+        Date startTime = new Date(119, 01, 01);
+        Date endTime = new Date();
+
+        mockMvc.perform(get("/vote/list")
+                .param("startTime", startTime.toString())
+                .param("endTime", endTime.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }

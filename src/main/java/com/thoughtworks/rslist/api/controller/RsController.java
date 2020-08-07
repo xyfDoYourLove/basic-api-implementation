@@ -2,12 +2,15 @@ package com.thoughtworks.rslist.api.controller;
 
 import com.thoughtworks.rslist.api.service.RsService;
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.Vote;
+import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.param.RsEventInputParam;
 import com.thoughtworks.rslist.param.VoteInputParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -59,5 +62,14 @@ public class RsController {
       return ResponseEntity.created(null).build();
     }
     return ResponseEntity.badRequest().build();
+  }
+
+  @GetMapping("/vote/list")
+  public ResponseEntity getVoteListBetweenStartAndEnd(@RequestParam Date startTime, @RequestParam Date endTime) {
+    List<Vote> voteList = rsService.getVoteListBetween(startTime, endTime);
+    if (voteList == null || voteList.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+    return ResponseEntity.ok(voteList);
   }
 }

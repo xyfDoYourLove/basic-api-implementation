@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.api.repository.UserRepository;
 import com.thoughtworks.rslist.api.repository.VoteRepository;
 import com.thoughtworks.rslist.api.service.RsService;
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.Vote;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.dto.VoteDto;
@@ -13,6 +14,7 @@ import com.thoughtworks.rslist.param.VoteInputParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,6 +109,15 @@ public class RsServiceImpl implements RsService {
         voteRepository.save(build);
 
         return true;
+    }
+
+    @Override
+    public List<Vote> getVoteListBetween(Date startTime, Date endTime) {
+        List<VoteDto> allByVoteDateTimeBetween = voteRepository.findAllByVoteDateTimeBetween(startTime, endTime);
+        List<Vote> voteList = allByVoteDateTimeBetween.stream().map(
+                item -> item.convert2Vote()
+        ).collect(Collectors.toList());
+        return voteList;
     }
 
 }

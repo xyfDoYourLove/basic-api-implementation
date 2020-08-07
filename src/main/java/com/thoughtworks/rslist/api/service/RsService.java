@@ -1,9 +1,11 @@
 package com.thoughtworks.rslist.api.service;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.Vote;
 import com.thoughtworks.rslist.param.RsEventInputParam;
 import com.thoughtworks.rslist.param.VoteInputParam;
 
+import java.util.Date;
 import java.util.List;
 
 public interface RsService {
@@ -19,4 +21,6 @@ public interface RsService {
     Boolean updateRsEventWhenUserMatch(int rsEventId, RsEventInputParam rsEventInputParam);
 
     Boolean voteToRsEvent(int rsEventId, VoteInputParam voteInputParam);
+
+    List<Vote> getVoteListBetween(Date startDate, Date endDate);
 }
