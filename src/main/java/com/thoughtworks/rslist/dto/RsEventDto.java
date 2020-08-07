@@ -41,6 +41,7 @@ public class RsEventDto {
 
     public RsEvent convert2RsEvent() {
         RsEvent rsEvent = new RsEvent();
+        rsEvent.setId(getId());
         rsEvent.setEventName(getEventName());
         rsEvent.setKeyWord(getKeyWord());
         rsEvent.setVotedNum(getVotedNum());

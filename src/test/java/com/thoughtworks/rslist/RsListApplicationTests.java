@@ -485,4 +485,16 @@ class RsListApplicationTests {
                 .andExpect(status().isBadRequest());
 
     }
+
+    @Test
+    void should_get_rs_list_with_id_and_votedNum() throws Exception {
+        RsEventDto rsEventDto = rsEventRepository.findAll().get(0);
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[0].id", is(rsEventDto.getId())))
+                .andExpect(jsonPath("$[0].votedNum", is(0)))
+                .andExpect(status().isOk());
+    }
 }
