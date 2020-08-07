@@ -13,7 +13,7 @@ public interface RsService {
 
     RsEvent getRsEventById(int index);
 
-    ResponseEntity addRsEvent(RsEvent rsEvent);
+    Integer addRsEvent(RsEvent rsEvent);
 
     void updateRsEventIndex(int index, RsEvent rsEvent);
 

@@ -9,7 +9,6 @@ import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.dto.VoteDto;
-import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import com.thoughtworks.rslist.param.RsEventInputParam;
 import com.thoughtworks.rslist.param.VoteInputParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,38 +47,24 @@ public class RsServiceImpl implements RsService {
     }
 
     @Override
-    public ResponseEntity addRsEvent(RsEvent rsEvent) {
-
-        UserDto userDto = UserDto.builder()
-                .userName(rsEvent.getUser().getUserName())
-                .gender(rsEvent.getUser().getGender())
-                .age(rsEvent.getUser().getAge())
-                .email(rsEvent.getUser().getEmail())
-                .phone(rsEvent.getUser().getPhone())
-                .voteNum(rsEvent.getUser().getVoteNum())
-                .build();
-
-        List<RsEventDto> all = rsEventRepository.findAll();
-
+    public Integer addRsEvent(RsEvent rsEvent) {
+        List<UserDto> allUserBefore = userRepository.findAll();
+        RsEventDto rsEventDto;
         if (userRepository.findByUserName(rsEvent.getUser().getUserName()) == null) {
+            UserDto userDto = rsEvent.getUser().convent2UserDtoNoId();
             userRepository.save(userDto);
-            RsEventDto rsEventDto = RsEventDto.builder()
-                    .eventName(rsEvent.getEventName())
-                    .keyWord(rsEvent.getKeyWord())
-                    .userDto(userDto)
-                    .build();
+            rsEventDto = rsEvent.convert2RsEventNoId(userDto);
             rsEventRepository.save(rsEventDto);
-
-            return ResponseEntity.badRequest().header("index", String.valueOf(all.size() - 1)).build();
+        }else {
+            rsEventDto = rsEvent.convert2RsEventNoId(userRepository.findByUserName(rsEvent.getUser().getUserName()));
+            rsEventRepository.save(rsEventDto);
         }
-        RsEventDto rsEventDto = RsEventDto.builder()
-                .eventName(rsEvent.getEventName())
-                .keyWord(rsEvent.getKeyWord())
-                .userDto(userRepository.findByUserName(rsEvent.getUser().getUserName()))
-                .build();
-        rsEventRepository.save(rsEventDto);
+        List<UserDto> allUserAfter = userRepository.findAll();
 
-        return ResponseEntity.created(null).header("index", String.valueOf(all.size() - 1)).build();
+        if (allUserAfter.size() - allUserBefore.size() > 0) {
+            return rsEventDto.getId();
+        }
+        return null;
     }
 
     @Override

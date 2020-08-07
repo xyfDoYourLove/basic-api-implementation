@@ -31,8 +31,11 @@ public class RsController {
 
   @PostMapping("/rs/event")
   public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
-    ResponseEntity responseEntity = rsService.addRsEvent(rsEvent);
-    return responseEntity;
+    Integer isUserExist = rsService.addRsEvent(rsEvent);
+    if (isUserExist == null) {
+      return ResponseEntity.badRequest().header("id", String.valueOf(-1)).build();
+    }
+    return ResponseEntity.created(null).header("id", String.valueOf(isUserExist)).build();
   }
 
   @PatchMapping("/rs/list/{index}")

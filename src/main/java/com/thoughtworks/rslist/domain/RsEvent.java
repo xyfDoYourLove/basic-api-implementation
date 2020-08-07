@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.thoughtworks.rslist.dto.RsEventDto;
+import com.thoughtworks.rslist.dto.UserDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,12 +23,12 @@ public class RsEvent {
     @NotNull
     private User user;
 
-    public RsEventDto convert2RsEventNoId() {
+    public RsEventDto convert2RsEventNoId(UserDto userDto) {
         RsEventDto rsEventDto = RsEventDto.builder()
                 .eventName(getEventName())
                 .keyWord(getKeyWord())
                 .votedNum(getVotedNum())
-                .userDto(getUser().convent2UserDtoNoId())
+                .userDto(userDto)
                 .build();
         return rsEventDto;
     }

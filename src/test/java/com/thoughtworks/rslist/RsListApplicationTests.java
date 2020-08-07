@@ -1,6 +1,5 @@
 package com.thoughtworks.rslist;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.api.repository.RsEventRepository;
@@ -19,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -58,21 +56,16 @@ class RsListApplicationTests {
 
         userRepository.deleteAll();
         user = UserDto.builder()
-                .userName("xyf")
-                .gender("male")
-                .age(19)
-                .email("xiao@thought.com")
-                .phone("19999999999")
-                .voteNum(10)
+                .userName("xyf").gender("male")
+                .age(19).email("xiao@thought.com")
+                .phone("19999999999").voteNum(10)
                 .build();
         userRepository.save(user);
 
         rsEventRepository.deleteAll();
         rsEvent = RsEventDto.builder()
-                .eventName("第一条事件")
-                .keyWord("无标签")
-                .votedNum(0)
-                .userDto(user)
+                .eventName("第一条事件").keyWord("无标签")
+                .votedNum(0).userDto(user)
                 .build();
         rsEventRepository.save(rsEvent);
     }
@@ -98,7 +91,7 @@ class RsListApplicationTests {
 
     @Test
     void should_add_rs_event() throws Exception {
-        User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
+        User user = new User("xyf1", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("石油降价了", "经济", user);
         String event = objectMapper.writeValueAsString(rsEvent);
 
@@ -143,7 +136,7 @@ class RsListApplicationTests {
 
     @Test
     void should_register_user_when_add_rs_event_if_user_not_exist() throws Exception {
-        User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
+        User user = new User("xyf1", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", user);
         String event = objectMapper.writeValueAsString(rsEvent);
 
@@ -151,20 +144,20 @@ class RsListApplicationTests {
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/get/users"))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userName", is("xyf")))
-                .andExpect(jsonPath("$[0].age", is(19)))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[1].userName", is("xyf1")))
+                .andExpect(jsonPath("$[1].age", is(19)))
                 .andExpect(status().isOk());
     }
 
     @Test
     void should_not_register_user_when_add_rs_event_if_user_exist() throws Exception {
-        User user = new User("xiaowang", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
+        User user = new User("xyf1", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条热搜", "娱乐", user);
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isCreated());
 
         mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -349,9 +342,9 @@ class RsListApplicationTests {
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("index"))
-                .andExpect(header().string("index", "0"));
+                .andExpect(status().isBadRequest())
+                .andExpect(header().exists("id"))
+                .andExpect(header().stringValues("id", "-1"));
     }
 
     @Test
@@ -398,7 +391,7 @@ class RsListApplicationTests {
 
     @Test
     void should_add_rs_event_to_database_if_user_exist() throws Exception {
-        User user = new User("xyf", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
+        User user = new User("xyf1", "male", 19, "xiao@thoughtworks.com", "18888888888", 10);
         RsEvent rsEvent = new RsEvent("添加一条事件", "娱乐", user);
         String event = objectMapper.writeValueAsString(rsEvent);
 
@@ -406,7 +399,7 @@ class RsListApplicationTests {
                 .andExpect(status().isCreated());
 
         List<UserDto> all = userRepository.findAll();
-        assertEquals(1, all.size());
+        assertEquals(2, all.size());
     }
 
     @Test
@@ -416,7 +409,7 @@ class RsListApplicationTests {
         String event = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs/event").content(event).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isCreated());
 
         List<UserDto> all = userRepository.findAll();
         assertEquals(2, all.size());
