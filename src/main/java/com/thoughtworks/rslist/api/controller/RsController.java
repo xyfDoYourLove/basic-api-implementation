@@ -54,7 +54,10 @@ public class RsController {
 
   @PostMapping("/rs/vote/{rsEventId}")
   public ResponseEntity voteToRsEvent(@PathVariable int rsEventId, @RequestBody @Valid VoteInputParam voteInputParam) {
-    ResponseEntity responseEntity = rsService.voteToRsEvent(rsEventId, voteInputParam);
-    return responseEntity;
+    Boolean isSuccess = rsService.voteToRsEvent(rsEventId, voteInputParam);
+    if (isSuccess) {
+      return ResponseEntity.created(null).build();
+    }
+    return ResponseEntity.badRequest().build();
   }
 }

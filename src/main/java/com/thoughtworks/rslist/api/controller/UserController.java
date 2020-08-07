@@ -1,6 +1,5 @@
 package com.thoughtworks.rslist.api.controller;
 
-import com.thoughtworks.rslist.common.method.DataInitMethod;
 import com.thoughtworks.rslist.api.service.UserService;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.UserDto;

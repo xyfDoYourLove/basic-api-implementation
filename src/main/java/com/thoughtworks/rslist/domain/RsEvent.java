@@ -4,10 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+@Data
 public class RsEvent {
 
     @NotNull
@@ -23,6 +27,16 @@ public class RsEvent {
     @NotNull
     private User user;
 
+    public RsEvent() {
+    }
+
+    public RsEvent(@NotNull String eventName, @NotNull String keyWord, @NotNull Integer votedNum, @Valid @NotNull User user) {
+        this.eventName = eventName;
+        this.keyWord = keyWord;
+        this.votedNum = votedNum;
+        this.user = user;
+    }
+
     public RsEventDto convert2RsEventNoId(UserDto userDto) {
         RsEventDto rsEventDto = RsEventDto.builder()
                 .eventName(getEventName())
@@ -33,31 +47,6 @@ public class RsEvent {
         return rsEventDto;
     }
 
-    public RsEvent() {
-    }
-
-    public RsEvent(String eventName, String keyWord, User user) {
-        this.eventName = eventName;
-        this.keyWord = keyWord;
-        this.user = user;
-    }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getKeyWord() {
-        return keyWord;
-    }
-
-    public void setKeyWord(String keyWord) {
-        this.keyWord = keyWord;
-    }
-
     @JsonIgnore
     public User getUser() {
         return user;
@@ -66,13 +55,5 @@ public class RsEvent {
     @JsonProperty
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Integer getVotedNum() {
-        return votedNum;
-    }
-
-    public void setVotedNum(Integer votedNum) {
-        this.votedNum = votedNum;
     }
 }

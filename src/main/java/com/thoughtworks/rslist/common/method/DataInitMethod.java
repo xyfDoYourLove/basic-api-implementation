@@ -17,9 +17,9 @@ public class DataInitMethod {
     public static void initRsEvents() {
         rsEvents.clear();
         User user = new User("xiaowang", "female", 18, "a@thoughtworks.com", "18888888888", 10);
-        rsEvents.add(new RsEvent("第一条事件", "无标签", user));
-        rsEvents.add(new RsEvent("第二条事件", "无标签", user));
-        rsEvents.add(new RsEvent("第三条事件", "无标签", user));
+        rsEvents.add(new RsEvent("第一条事件", "无标签", 0, user));
+        rsEvents.add(new RsEvent("第二条事件", "无标签", 0, user));
+        rsEvents.add(new RsEvent("第三条事件", "无标签", 0, user));
     }
 
     public static void initUserTable() {
