@@ -88,9 +88,10 @@ public class RsServiceImpl implements RsService {
     }
 
     @Override
-    public ResponseEntity updateRsEventWhenUserMatch(int rsEventId, RsEventInputParam rsEventInputParam) {
+    public Boolean updateRsEventWhenUserMatch(int rsEventId, RsEventInputParam rsEventInputParam) {
         RsEventDto rsEventDto = rsEventRepository.findById(rsEventId).get();
-        if (rsEventDto.getUserDto().getId() == Integer.valueOf(rsEventInputParam.getUserId())) {
+
+        if (Integer.valueOf(rsEventInputParam.getUserId()).compareTo(rsEventDto.getUserDto().getId()) == 0) {
             if (rsEventInputParam.getEventName() != null && rsEventInputParam.getEventName() != "") {
                 rsEventDto.setEventName(rsEventInputParam.getEventName());
             }
@@ -98,9 +99,9 @@ public class RsServiceImpl implements RsService {
                 rsEventDto.setKeyWord(rsEventInputParam.getKeyWord());
             }
             rsEventRepository.save(rsEventDto);
-            return ResponseEntity.ok().build();
+            return true;
         }
-        return ResponseEntity.badRequest().build();
+        return false;
     }
 
     @Override

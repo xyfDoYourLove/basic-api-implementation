@@ -38,22 +38,19 @@ public class RsController {
     return ResponseEntity.created(null).header("id", String.valueOf(isUserExist)).build();
   }
 
-  @PatchMapping("/rs/list/{index}")
-  public ResponseEntity updateRsEventIndex(@PathVariable int index, @RequestBody RsEvent rsEvent) {
-    rsService.updateRsEventIndex(index, rsEvent);
-    return ResponseEntity.ok().build();
+  @PatchMapping("/rs/{rsEventId}")
+  public ResponseEntity updateRsEventWhenUserMatch(@PathVariable int rsEventId, @RequestBody @Valid RsEventInputParam rsEventInputParam) {
+    Boolean isSuccess = rsService.updateRsEventWhenUserMatch(rsEventId, rsEventInputParam);
+    if (isSuccess) {
+      return ResponseEntity.ok().build();
+    }
+    return ResponseEntity.badRequest().build();
   }
 
   @DeleteMapping("/rs/{id}")
   public ResponseEntity deleteRsEventIndex(@PathVariable int id) {
     rsService.deleteRsEventIndex(id);
     return ResponseEntity.ok().build();
-  }
-
-  @PatchMapping("/rs/{rsEventId}")
-  public ResponseEntity updateRsEventWhenUserMatch(@PathVariable int rsEventId, @RequestBody @Valid RsEventInputParam rsEventInputParam) {
-    ResponseEntity responseEntity = rsService.updateRsEventWhenUserMatch(rsEventId, rsEventInputParam);
-    return responseEntity;
   }
 
   @PostMapping("/rs/vote/{rsEventId}")

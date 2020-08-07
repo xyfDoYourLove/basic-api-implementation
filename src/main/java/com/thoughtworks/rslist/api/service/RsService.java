@@ -19,7 +19,7 @@ public interface RsService {
 
     void deleteRsEventIndex(int id);
 
-    ResponseEntity updateRsEventWhenUserMatch(int rsEventId, RsEventInputParam rsEventInputParam);
+    Boolean updateRsEventWhenUserMatch(int rsEventId, RsEventInputParam rsEventInputParam);
 
     ResponseEntity voteToRsEvent(int rsEventId, VoteInputParam voteInputParam);
 }

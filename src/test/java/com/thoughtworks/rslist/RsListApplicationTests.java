@@ -108,18 +108,22 @@ class RsListApplicationTests {
     }
 
     @Test
-    void should_update_rs_event_index() throws Exception {
-        User user = new User("xyf", "male", 2, "xiao@thoughtworks.com", "18888888888", 10);
-        RsEvent rsEvent = new RsEvent("修改第三条事件", "", user);
-        String event = objectMapper.writeValueAsString(rsEvent);
+    void should_update_rs_event_by_id() throws Exception {
 
-        mockMvc.perform(patch("/rs/list/3").content(event).contentType(MediaType.APPLICATION_JSON))
+        RsEventDto rsEventDto = rsEventRepository.findAll().get(0);
+        RsEventInputParam rsEventInputParam = new RsEventInputParam();
+        rsEventInputParam.setEventName("修改第三条事件");
+        rsEventInputParam.setKeyWord("娱乐");
+        rsEventInputParam.setUserId(String.valueOf(rsEventDto.getUserDto().getId()));
+        String event = objectMapper.writeValueAsString(rsEventInputParam);
+
+        mockMvc.perform(patch("/rs/" + rsEventDto.getId()).content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyWord", is("无标签")))
+                .andExpect(jsonPath("$[0].eventName", is("修改第三条事件")))
+                .andExpect(jsonPath("$[0].keyWord", is("娱乐")))
                 .andExpect(status().isOk());
     }
 
@@ -166,12 +170,16 @@ class RsListApplicationTests {
 
     @Test
     void should_register_user_when_update_rs_event_if_user_not_exist() throws Exception {
-        User user = new User("xyf", "male", 2, "xiao@thoughtworks.com", "18888888888", 10);
-        RsEvent rsEvent = new RsEvent("修改第三条事件", "娱乐", user);
-        String event = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(patch("/rs/list/3").content(event).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        RsEventDto rsEventDto = rsEventRepository.findAll().get(0);
+        RsEventInputParam rsEventInputParam = new RsEventInputParam();
+        rsEventInputParam.setEventName("修改第三条事件");
+        rsEventInputParam.setKeyWord("娱乐");
+        rsEventInputParam.setUserId("1111");
+        String event = objectMapper.writeValueAsString(rsEventInputParam);
+
+        mockMvc.perform(patch("/rs/" + rsEventDto.getId()).content(event).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
 
         mockMvc.perform(get("/get/users"))
                 .andExpect(jsonPath("$", hasSize(1)))
