@@ -8,6 +8,7 @@ import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
+import com.thoughtworks.rslist.param.RsEventInputParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,22 @@ public class RsServiceImpl implements RsService {
     @Override
     public void deleteRsEventIndex(int id) {
         rsEventRepository.deleteById(id);
+    }
+
+    @Override
+    public ResponseEntity updateRsEventWhenUserMatch(int rsEventId, RsEventInputParam rsEventInputParam) {
+        RsEventDto rsEventDto = rsEventRepository.findById(rsEventId).get();
+        if (rsEventDto.getUserDto().getId() == Integer.valueOf(rsEventInputParam.getUserId())) {
+            if (rsEventInputParam.getEventName() != null && rsEventInputParam.getEventName() != "") {
+                rsEventDto.setEventName(rsEventInputParam.getEventName());
+            }
+            if (rsEventInputParam.getKeyWord() != null && rsEventInputParam.getKeyWord() != "") {
+                rsEventDto.setKeyWord(rsEventInputParam.getKeyWord());
+            }
+            rsEventRepository.save(rsEventDto);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     public boolean isStartAndEndValid(int start, int end) {

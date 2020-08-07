@@ -8,6 +8,7 @@ import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.param.RsEventInputParam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,7 +155,7 @@ class RsListApplicationTests {
         RsEvent rsEvent = new RsEvent("修改第三条事件", "", user);
         String event = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(patch("/rs/3").content(event).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/rs/list/3").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/rs/list"))
@@ -219,7 +220,7 @@ class RsListApplicationTests {
         RsEvent rsEvent = new RsEvent("修改第三条事件", "娱乐", user);
         String event = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(patch("/rs/3").content(event).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/rs/list/3").content(event).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/get/users"))
@@ -491,5 +492,43 @@ class RsListApplicationTests {
 
         List<UserDto> all = userRepository.findAll();
         assertEquals(2, all.size());
+    }
+
+    @Test
+    void should_update_event_when_user_match() throws Exception {
+        RsEventDto rsEventDto = rsEventRepository.findAll().get(0);
+
+        RsEventInputParam rsEventInputParam = new RsEventInputParam();
+        rsEventInputParam.setEventName("新的热搜事件");
+        rsEventInputParam.setKeyWord("新的关键字");
+        rsEventInputParam.setUserId(String.valueOf(rsEventDto.getUserDto().getId()));
+
+        String jsonString = objectMapper.writeValueAsString(rsEventInputParam);
+
+        mockMvc.perform(patch("/rs/" + rsEventDto.getId()).content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        RsEventDto rsEventDtoUpdated = rsEventRepository.findById(rsEventDto.getId()).get();
+        assertEquals("新的热搜事件", rsEventDtoUpdated.getEventName());
+        assertEquals("新的关键字", rsEventDtoUpdated.getKeyWord());
+    }
+
+    @Test
+    void should_update_event_when_user_not_match() throws Exception {
+        RsEventDto rsEventDto = rsEventRepository.findAll().get(0);
+
+        RsEventInputParam rsEventInputParam = new RsEventInputParam();
+        rsEventInputParam.setEventName("新的热搜事件");
+        rsEventInputParam.setKeyWord("新的关键字");
+        rsEventInputParam.setUserId(String.valueOf(1111));
+
+        String jsonString = objectMapper.writeValueAsString(rsEventInputParam);
+
+        mockMvc.perform(patch("/rs/" + rsEventDto.getId()).content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        RsEventDto rsEventDtoUpdated = rsEventRepository.findById(rsEventDto.getId()).get();
+        assertEquals("第一条事件", rsEventDtoUpdated.getEventName());
+        assertEquals("无标签", rsEventDtoUpdated.getKeyWord());
     }
 }

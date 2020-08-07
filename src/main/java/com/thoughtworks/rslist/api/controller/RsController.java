@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api.controller;
 import com.thoughtworks.rslist.api.service.RsService;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
+import com.thoughtworks.rslist.param.RsEventInputParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class RsController {
     return responseEntity;
   }
 
-  @PatchMapping("/rs/{index}")
+  @PatchMapping("/rs/list/{index}")
   public ResponseEntity updateRsEventIndex(@PathVariable int index, @RequestBody RsEvent rsEvent) {
     rsService.updateRsEventIndex(index, rsEvent);
     return ResponseEntity.ok().build();
@@ -56,5 +57,11 @@ public class RsController {
   public ResponseEntity deleteRsEventIndex(@PathVariable int id) {
     rsService.deleteRsEventIndex(id);
     return ResponseEntity.ok().build();
+  }
+
+  @PatchMapping("/rs/{rsEventId}")
+  public ResponseEntity updateRsEventWhenUserMatch(@PathVariable int rsEventId, @RequestBody @Valid RsEventInputParam rsEventInputParam) {
+    ResponseEntity responseEntity = rsService.updateRsEventWhenUserMatch(rsEventId, rsEventInputParam);
+    return responseEntity;
   }
 }

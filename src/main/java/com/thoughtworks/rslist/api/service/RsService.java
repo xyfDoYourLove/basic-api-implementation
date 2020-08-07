@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api.service;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.param.RsEventInputParam;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public interface RsService {
 
     void deleteRsEventIndex(int id);
 
+    ResponseEntity updateRsEventWhenUserMatch(int rsEventId, RsEventInputParam rsEventInputParam);
 }
