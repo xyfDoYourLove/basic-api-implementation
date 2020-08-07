@@ -83,7 +83,7 @@ public class RsServiceImpl implements RsService {
     }
 
     @Override
-    public void deleteRsEventIndex(int id) {
+    public void deleteRsEventById(int id) {
         rsEventRepository.deleteById(id);
     }
 

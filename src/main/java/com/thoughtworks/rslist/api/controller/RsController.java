@@ -2,7 +2,6 @@ package com.thoughtworks.rslist.api.controller;
 
 import com.thoughtworks.rslist.api.service.RsService;
 import com.thoughtworks.rslist.domain.RsEvent;
-import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import com.thoughtworks.rslist.param.RsEventInputParam;
 import com.thoughtworks.rslist.param.VoteInputParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class RsController {
 
   @DeleteMapping("/rs/{id}")
   public ResponseEntity deleteRsEventIndex(@PathVariable int id) {
-    rsService.deleteRsEventIndex(id);
+    rsService.deleteRsEventById(id);
     return ResponseEntity.ok().build();
   }
 

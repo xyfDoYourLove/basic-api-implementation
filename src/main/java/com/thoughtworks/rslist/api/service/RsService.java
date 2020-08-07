@@ -17,7 +17,7 @@ public interface RsService {
 
     void updateRsEventIndex(int index, RsEvent rsEvent);
 
-    void deleteRsEventIndex(int id);
+    void deleteRsEventById(int id);
 
     Boolean updateRsEventWhenUserMatch(int rsEventId, RsEventInputParam rsEventInputParam);
 
