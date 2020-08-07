@@ -2,8 +2,11 @@ package com.thoughtworks.rslist.api.controller;
 
 import com.thoughtworks.rslist.api.service.RsService;
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import com.thoughtworks.rslist.param.RsEventInputParam;
+import com.thoughtworks.rslist.param.VoteInputParam;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +65,12 @@ public class RsController {
   @PatchMapping("/rs/{rsEventId}")
   public ResponseEntity updateRsEventWhenUserMatch(@PathVariable int rsEventId, @RequestBody @Valid RsEventInputParam rsEventInputParam) {
     ResponseEntity responseEntity = rsService.updateRsEventWhenUserMatch(rsEventId, rsEventInputParam);
+    return responseEntity;
+  }
+
+  @PostMapping("/rs/vote/{rsEventId}")
+  public ResponseEntity voteToRsEvent(@PathVariable int rsEventId, @RequestBody @Valid VoteInputParam voteInputParam) {
+    ResponseEntity responseEntity = rsService.voteToRsEvent(rsEventId, voteInputParam);
     return responseEntity;
   }
 }

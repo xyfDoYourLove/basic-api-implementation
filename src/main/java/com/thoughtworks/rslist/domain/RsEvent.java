@@ -14,6 +14,9 @@ public class RsEvent {
     @NotNull
     private String keyWord;
 
+    @NotNull
+    private Integer votedNum = 0;
+
     @Valid
     @NotNull
     private User user;
@@ -51,5 +54,13 @@ public class RsEvent {
     @JsonProperty
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Integer getVotedNum() {
+        return votedNum;
+    }
+
+    public void setVotedNum(Integer votedNum) {
+        this.votedNum = votedNum;
     }
 }

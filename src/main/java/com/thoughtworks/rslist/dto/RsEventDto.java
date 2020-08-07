@@ -1,11 +1,9 @@
 package com.thoughtworks.rslist.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "rs_event")
@@ -16,44 +14,38 @@ public class RsEventDto {
 
     @Id
     @GeneratedValue
+    @Setter
+    @Getter
     private int id;
 
+    @Setter
+    @Getter
     private String eventName;
 
+    @Setter
+    @Getter
     private String keyWord;
 
+    @Getter
+    @Setter
+    private Integer votedNum = 0;
+
     @ManyToOne
+    @Setter
+    @Getter
     private UserDto userDto;
 
-    public int getId() {
-        return id;
-    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rsEventDto")
+    private List<VoteDto> voteDto;
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getKeyWord() {
-        return keyWord;
-    }
-
-    public void setKeyWord(String keyWord) {
-        this.keyWord = keyWord;
-    }
-
-    public UserDto getUserDto() {
-        return userDto;
-    }
-
-    public void setUserDto(UserDto userDto) {
-        this.userDto = userDto;
+    @Override
+    public String toString() {
+        return "RsEventDto{" +
+                "id=" + id +
+                ", eventName='" + eventName + '\'' +
+                ", keyWord='" + keyWord + '\'' +
+                ", votedNum=" + votedNum +
+                ", userDto=" + userDto +
+                '}';
     }
 }

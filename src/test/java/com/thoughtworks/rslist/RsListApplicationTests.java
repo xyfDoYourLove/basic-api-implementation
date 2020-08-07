@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.api.repository.RsEventRepository;
@@ -9,6 +10,7 @@ import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.param.RsEventInputParam;
+import com.thoughtworks.rslist.param.VoteInputParam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static com.thoughtworks.rslist.common.method.DataInitMethod.initRsEvents;
 import static com.thoughtworks.rslist.common.method.DataInitMethod.initUserTable;
@@ -68,6 +71,7 @@ class RsListApplicationTests {
         rsEvent = RsEventDto.builder()
                 .eventName("第一条事件")
                 .keyWord("无标签")
+                .votedNum(0)
                 .userDto(user)
                 .build();
         rsEventRepository.save(rsEvent);
@@ -530,5 +534,35 @@ class RsListApplicationTests {
         RsEventDto rsEventDtoUpdated = rsEventRepository.findById(rsEventDto.getId()).get();
         assertEquals("第一条事件", rsEventDtoUpdated.getEventName());
         assertEquals("无标签", rsEventDtoUpdated.getKeyWord());
+    }
+
+    @Test
+    void should_vote_when_voteNum_enough() throws Exception {
+        RsEventDto rsEventDto = rsEventRepository.findAll().get(0);
+
+        VoteInputParam voteInputParam = new VoteInputParam();
+        voteInputParam.setUserId(rsEventDto.getUserDto().getId());
+        voteInputParam.setVoteNum(5);
+        voteInputParam.setVoteTime(new Date());
+        String jsonString = objectMapper.writeValueAsString(voteInputParam);
+
+        mockMvc.perform(post("/rs/vote/" + rsEventDto.getId()).content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+    }
+
+    @Test
+    void should_vote_when_voteNum_not_enough() throws Exception {
+        RsEventDto rsEventDto = rsEventRepository.findAll().get(0);
+
+        VoteInputParam voteInputParam = new VoteInputParam();
+        voteInputParam.setUserId(rsEventDto.getUserDto().getId());
+        voteInputParam.setVoteNum(11);
+        voteInputParam.setVoteTime(new Date());
+        String jsonString = objectMapper.writeValueAsString(voteInputParam);
+
+        mockMvc.perform(post("/rs/vote/" + rsEventDto.getId()).content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
     }
 }

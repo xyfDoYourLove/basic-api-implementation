@@ -2,13 +2,16 @@ package com.thoughtworks.rslist.api.service.impl;
 
 import com.thoughtworks.rslist.api.repository.RsEventRepository;
 import com.thoughtworks.rslist.api.repository.UserRepository;
+import com.thoughtworks.rslist.api.repository.VoteRepository;
 import com.thoughtworks.rslist.api.service.RsService;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
 import com.thoughtworks.rslist.param.RsEventInputParam;
+import com.thoughtworks.rslist.param.VoteInputParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,9 @@ public class RsServiceImpl implements RsService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    VoteRepository voteRepository;
 
     @Override
     public List<RsEvent> getRsListBetween(Integer start, Integer end) {
@@ -115,6 +121,30 @@ public class RsServiceImpl implements RsService {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @Override
+    public ResponseEntity voteToRsEvent(int rsEventId, VoteInputParam voteInputParam) {
+        UserDto userDto = userRepository.findById(voteInputParam.getUserId()).get();
+        RsEventDto rsEventDto = rsEventRepository.findById(rsEventId).get();
+
+        if (userDto.getVoteNum() < voteInputParam.getVoteNum()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        userDto.setVoteNum(userDto.getVoteNum() - voteInputParam.getVoteNum());
+        userRepository.save(userDto);
+        rsEventDto.setVotedNum(rsEventDto.getVotedNum() + voteInputParam.getVoteNum());
+        rsEventRepository.save(rsEventDto);
+
+        VoteDto build = VoteDto.builder()
+                .voteNum(voteInputParam.getVoteNum())
+                .voteDateTime(voteInputParam.getVoteTime())
+                .userDto(userDto)
+                .rsEventDto(rsEventDto)
+                .build();
+        voteRepository.save(build);
+        return ResponseEntity.created(null).build();
     }
 
     public boolean isStartAndEndValid(int start, int end) {
