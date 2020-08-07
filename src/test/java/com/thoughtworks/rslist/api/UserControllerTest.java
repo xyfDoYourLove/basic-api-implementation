@@ -67,7 +67,7 @@ class UserControllerTest {
 
     @Test
     public void should_register_user() throws Exception {
-        User user = new User("xyf", "male", 18, "x@y.com", "18888888888", 10);
+        User user = new User("xyf1", "male", 18, "x@y.com", "18888888888", 10);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(user);
 
@@ -122,9 +122,9 @@ class UserControllerTest {
         String jsonString = objectMapper.writeValueAsString(user);
 
         mockMvc.perform(post("/user/register").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("index"))
-                .andExpect(header().string("index", "1"));
+                .andExpect(status().isBadRequest())
+                .andExpect(header().exists("id"))
+                .andExpect(header().string("id", "-1"));
     }
 
     @Test

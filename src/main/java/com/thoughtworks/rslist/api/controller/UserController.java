@@ -18,8 +18,11 @@ public class UserController {
 
     @PostMapping("/user/register")
     public ResponseEntity registerUser(@RequestBody @Valid User user) {
-        ResponseEntity responseEntity = userService.registerUser(user);
-        return responseEntity;
+        Integer isRegister = userService.registerUser(user);
+        if (isRegister == null) {
+            return ResponseEntity.badRequest().header("id", "-1").build();
+        }
+        return ResponseEntity.created(null).header("id", String.valueOf(isRegister)).build();
     }
 
     @GetMapping("/get/users")

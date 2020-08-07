@@ -18,20 +18,13 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 
     @Override
-    public ResponseEntity registerUser(User user) {
-        UserDto userDto = UserDto.builder()
-                .userName(user.getUserName())
-                .gender(user.getGender())
-                .age(user.getAge())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .voteNum(user.getVoteNum())
-                .build();
+    public Integer registerUser(User user) {
+        if (userRepository.findByUserName(user.getUserName()) != null) {
+            return null;
+        }
+        UserDto userDto = user.convent2UserDtoNoId();
         userRepository.save(userDto);
-
-        List<UserDto> all = userRepository.findAll();
-
-        return ResponseEntity.created(null).header("index", String.valueOf(all.size() - 1)).build();
+        return userDto.getId();
     }
 
     @Override
