@@ -3,7 +3,6 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.api.repository.RsEventRepository;
 import com.thoughtworks.rslist.api.repository.UserRepository;
-import com.thoughtworks.rslist.common.method.DataInitMethod;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
@@ -43,23 +42,17 @@ class UserControllerTest {
     @BeforeEach
     public void should_init_user_list() {
 
-        DataInitMethod.initUserTable();
-
         userRepository.deleteAll();
         user = UserDto.builder()
-                .userName("xyf")
-                .gender("male")
-                .age(19)
-                .email("xiao@thought.com")
-                .phone("19999999999")
-                .voteNum(10)
+                .userName("xyf").gender("male")
+                .age(19).email("xiao@thought.com")
+                .phone("19999999999").voteNum(10)
                 .build();
         userRepository.save(user);
 
         rsEventRepository.deleteAll();
         rsEvent = RsEventDto.builder()
-                .eventName("第一条事件")
-                .keyWord("无标签")
+                .eventName("第一条事件").keyWord("无标签")
                 .userDto(user)
                 .build();
         rsEventRepository.save(rsEvent);

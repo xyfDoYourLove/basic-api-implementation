@@ -37,14 +37,7 @@ public class UserServiceImpl implements UserService{
         Optional<UserDto> userOption = userRepository.findById(id);
         if (userOption.isPresent()) {
             UserDto userDto = userOption.get();
-            return User.builder()
-                    .userName(userDto.getUserName())
-                    .gender(userDto.getGender())
-                    .age(userDto.getAge())
-                    .email(userDto.getEmail())
-                    .phone(userDto.getPhone())
-                    .voteNum(userDto.getVoteNum())
-                    .build();
+            return userDto.convent2User();
         }
         return null;
     }
