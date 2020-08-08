@@ -79,7 +79,27 @@ class RsListApplicationTests {
                 .voteDateTime(new Date()).voteNum(5)
                 .rsEventDto(rsEvent).userDto(user)
                 .build();
-        voteRepository.saveAll(Arrays.asList(voteDto1, voteDto2));
+        VoteDto voteDto3 = VoteDto.builder()
+                .voteDateTime(new Date()).voteNum(5)
+                .rsEventDto(rsEvent).userDto(user)
+                .build();
+        VoteDto voteDto4 = VoteDto.builder()
+                .voteDateTime(new Date()).voteNum(5)
+                .rsEventDto(rsEvent).userDto(user)
+                .build();
+        VoteDto voteDto5 = VoteDto.builder()
+                .voteDateTime(new Date()).voteNum(5)
+                .rsEventDto(rsEvent).userDto(user)
+                .build();
+        VoteDto voteDto6 = VoteDto.builder()
+                .voteDateTime(new Date()).voteNum(5)
+                .rsEventDto(rsEvent).userDto(user)
+                .build();
+        VoteDto voteDto7 = VoteDto.builder()
+                .voteDateTime(new Date()).voteNum(5)
+                .rsEventDto(rsEvent).userDto(user)
+                .build();
+        voteRepository.saveAll(Arrays.asList(voteDto1, voteDto2, voteDto3, voteDto4, voteDto5, voteDto6, voteDto7));
     }
 
     @Test
@@ -522,8 +542,9 @@ class RsListApplicationTests {
 
         mockMvc.perform(get("/vote/list")
                 .param("startTime", startTime.toString())
-                .param("endTime", endTime.toString()))
+                .param("endTime", endTime.toString())
+                .param("pageIndex", "1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(5)));
     }
 }

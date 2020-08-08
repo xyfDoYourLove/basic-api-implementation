@@ -65,8 +65,8 @@ public class RsController {
   }
 
   @GetMapping("/vote/list")
-  public ResponseEntity getVoteListBetweenStartAndEnd(@RequestParam Date startTime, @RequestParam Date endTime) {
-    List<Vote> voteList = rsService.getVoteListBetween(startTime, endTime);
+  public ResponseEntity getVoteListBetweenStartAndEnd(@RequestParam Date startTime, @RequestParam Date endTime, @RequestParam int pageIndex) {
+    List<Vote> voteList = rsService.getVoteListBetween(startTime, endTime, pageIndex);
     if (voteList == null || voteList.isEmpty()) {
       return ResponseEntity.badRequest().build();
     }

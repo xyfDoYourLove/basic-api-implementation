@@ -22,5 +22,5 @@ public interface RsService {
 
     Boolean voteToRsEvent(int rsEventId, VoteInputParam voteInputParam);
 
-    List<Vote> getVoteListBetween(Date startDate, Date endDate);
+    List<Vote> getVoteListBetween(Date startDate, Date endDate, int pageIndex);
 }
